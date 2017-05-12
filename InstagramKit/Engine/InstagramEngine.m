@@ -460,7 +460,7 @@
                       withSuccess:(InstagramLocationsBlock)success
                           failure:(InstagramFailureBlock)failure
 {
-    [self getPaginatedPath:[NSString stringWithFormat:@"locations/%@", facebookId]
+    [self getPaginatedPath:[NSString stringWithFormat:@"locations/search?facebook_places_id=%@", facebookId]
                 parameters:nil
              responseModel:[InstagramLocation class]
                    success:success
