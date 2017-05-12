@@ -22,7 +22,7 @@ InstagramEngine *engine = [InstagramEngine sharedEngine];
 [engine getPopularMediaWithSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) {
     // media is an array of InstagramMedia objects
     ...
-} failure:^(NSError *error, NSInteger statusCode) {
+} failure:^(NSError *error, NSInteger statusCode, NSDictionary *response) {
     ...
 }];
 ```
@@ -30,44 +30,42 @@ InstagramEngine *engine = [InstagramEngine sharedEngine];
 The framework is built atop AFNetworking’s blocks-based architecture and additionally, parses JSON data and creates model objects asynchronously so there’s absolutely no parsing on the main thread.
 It’s neat, fast and works like a charm.
 
-##Installation
+## Installation
 
 Getting started is easy. Just include the files from the directory 'InstagramKit' into your project and you'll be up and running. You may need to add AFNetworking to your project as well if you haven't already.
 
-####CocoaPods Podfile
+#### CocoaPods Podfile
 ```ruby
-pod 'InstagramKit', '~> 3.0'
+pod 'InstagramKit', :git => 'https://github.com/dee-lewis/InstagramKit.git'
 ```
 If your App uses authorization and you'd like the storage and retrieval of the access token to and from the Keychain to be automatically handled for you by InstagramKit, include the following pods instead -
 
 ```ruby
-pod 'InstagramKit', '~> 3.0'
-pod 'InstagramKit/UICKeyChainStore'
+pod 'InstagramKit', :git => 'https://github.com/dee-lewis/InstagramKit.git'
+pod 'InstagramKit/UICKeyChainStore', :git => 'https://github.com/dee-lewis/InstagramKit.git'
 ```
- 
-InstagramKit uses [UICKeyChainStore](https://github.com/kishikawakatsumi/UICKeyChainStore) as an optional sub-dependency for Keychain access. 
+
+InstagramKit uses [UICKeyChainStore](https://github.com/kishikawakatsumi/UICKeyChainStore) as an optional sub-dependency for Keychain access.
 If you opt to use the optional pod, InstagramKit resumes your authenticated sessions across App launches, without needing any additional code.
 
 #### Instagram Developer Registration
-Head over to http://instagram.com/developer/clients/manage/ to register your app with Instagram and set the right credentials for ```InstagramAppClientId``` and ```InstagramAppRedirectURL``` in your App's Info.plist file. 
+Head over to http://instagram.com/developer/clients/manage/ to register your app with Instagram and set the right credentials for ```InstagramAppClientId``` and ```InstagramAppRedirectURL``` in your App's Info.plist file.
 
 ```InstagramAppClientId``` is your App's Client Id and ```InstagramAppRedirectURL```, the redirect URI which is obtained on registering your App on Instagram's Developer Dashboard.
-The redirect URI specifies where Instagram should redirect users after they have chosen whether or not to authenticate your application. 
+The redirect URI specifies where Instagram should redirect users after they have chosen whether or not to authenticate your application.
 
-## Instagram Platform Updates
-http://developers.instagram.com/post/133424514006/instagram-platform-update
+##### RedirectURL
 
-Due to Instagram's recent update to it's API, new Apps will no longer be able to access unauthenticated requests and a few other endpoints supported by InstagramKit. An update to InstagramKit to support these changes is on it's way. 
-You may refer to Instagram's API changelog here - https://www.instagram.com/developer/changelog/
+If you are new to OAuth. [RedirectURL Reference](https://github.com/dee-lewis/Instagram-PHP-API)
 
-##Usage
+## Usage
 
 #### Authentication
 
 For each API call, you will need an Access Token and specific scope permissions. To get the Access Token, the user needs to authenticate your app to access his Instagram account with the specified permissions.
 
-To do so, redirect the user to ```https://instagram.com/oauth/authorize/?client_id=[Client ID]&redirect_uri=[Redirect URI]&response_type=token``` 
-or allow InstagramEngine's helper method do the hard work for you - 
+To do so, redirect the user to ```https://instagram.com/oauth/authorize/?client_id=[Client ID]&redirect_uri=[Redirect URI]&response_type=token```
+or allow InstagramEngine's helper method do the hard work for you -
 
 ```Objective-C
 NSURL *authURL = [[InstagramEngine sharedEngine] authorizationURL];
@@ -75,7 +73,7 @@ NSURL *authURL = [[InstagramEngine sharedEngine] authorizationURL];
 ```
 
 #### Scopes
-All apps have basic read access by default, but if you plan on asking for extended access such as liking, commenting, or managing friendships, you need to specify these scopes in your authorization request using the InstagramKitScope enum. 
+All apps have basic read access by default, but if you plan on asking for extended access such as liking, commenting, or managing friendships, you need to specify these scopes in your authorization request using the InstagramKitScope enum.
 
 _Note that in order to use these extended permissions, first you need to submit your app for review to Instagram._
 
@@ -85,16 +83,16 @@ _For your app to POST or DELETE likes, comments or follows, you must apply to In
 // Set scope depending on permissions your App has been granted from Instagram
 // InstagramKitLoginScopeBasic is included by default.
 
-InstagramKitLoginScope scope = InstagramKitLoginScopeRelationships | InstagramKitLoginScopeComments | InstagramKitLoginScopeLikes; 
+InstagramKitLoginScope scope = InstagramKitLoginScopeRelationships | InstagramKitLoginScopeComments | InstagramKitLoginScopeLikes;
 
 NSURL *authURL = [[InstagramEngine sharedEngine] authorizationURLForScope:scope];
 [self.webView loadRequest:[NSURLRequest requestWithURL:authURL]];
 ```
 
-Once the user grants your app permission, they will be redirected to a url in the form of something like ```http://localhost/#access_token=[access_token]``` and ```[access_token]``` will be split by a period like ```[userID].[rest of access token]```. 
+Once the user grants your app permission, they will be redirected to a url in the form of something like ```http://localhost/#access_token=[access_token]``` and ```[access_token]``` will be split by a period like ```[userID].[rest of access token]```.
 InstagramEngine includes a helper method to validate this token.
 
-#####UIWebView
+##### UIWebView
 ```Objective-C
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
@@ -108,16 +106,16 @@ InstagramEngine includes a helper method to validate this token.
 }
 ```
 
-#####WKWebView
+##### WKWebView
 ```Objective-C
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(nonnull WKNavigationAction *)navigationAction decisionHandler:(nonnull void (^)(WKNavigationActionPolicy))decisionHandler
-{   
+{
     NSError *error;
     if ([[InstagramEngine sharedEngine] receivedValidAccessTokenFromURL:navigationAction.request.URL error:&error]) {
         // success!
         ...
-    }    
+    }
     decisionHandler(WKNavigationActionPolicyAllow);
 }
 
@@ -137,24 +135,24 @@ InstagramEngine *engine = [InstagramEngine sharedEngine];
 }];
 ```
 
-####Pagination 
-The `InstagramPaginationInfo` object has everything it needs to make your next pagination call. 
+#### Pagination
+The `InstagramPaginationInfo` object has everything it needs to make your next pagination call.
 
 If you need to make fetch a paginated feed of results, use the variation of the method which accepts `count` and `maxId` as parameters.
 For instance, use `getMediaForUser:count:maxId:withSuccess:failure:` passing the next maxID to the `maxId` parameter each time, obtained from `paginationInfo.nextMaxId` of the newest paginationInfo object.
 
 ```Objective-C
-[engine getMediaForUser:user.Id 
-                  count:15 
-                  maxId:self.currentPaginationInfo.nextMaxId 
-            withSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo) 
+[engine getMediaForUser:user.Id
+                  count:15
+                  maxId:self.currentPaginationInfo.nextMaxId
+            withSuccess:^(NSArray *media, InstagramPaginationInfo *paginationInfo)
                {
                      if (paginationInfo) {
                          self.currentPaginationInfo = paginationInfo;
                      }
                      ...
-               } 
-               failure:^(NSError *error) 
+               }
+               failure:^(NSError *error)
                {
                      ...
                }];
@@ -169,11 +167,11 @@ You can also use it in cases where you do not need pagination, but need to speci
 
 Read in detail about more ways of implementing Pagination for your requests effortlessly in the [Pagination Wiki](https://github.com/shyambhat/InstagramKit/wiki/Pagination).
 
-####Demo
+#### Demo
 
 Download and run the Example Project to understand how the engine is intended to be used.
 
-##Contributions?
+## Contributions?
 
 Glad you asked. Check out the [open Issues](https://github.com/shyambhat/InstagramKit/issues?state=open) and jump right in.
 
