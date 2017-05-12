@@ -67,7 +67,7 @@
         NSURL *baseURL = [NSURL URLWithString:kInstagramKitBaseURL];
         self.httpManager = [[AFHTTPSessionManager alloc] initWithBaseURL:baseURL];
         self.httpManager.responseSerializer = [[AFJSONResponseSerializer alloc] init];
-
+        
         NSDictionary *info = [[NSBundle mainBundle] infoDictionary];
         if (INSTAGRAMKIT_TEST_TARGET) {
             info = [[NSBundle bundleForClass:[self class]] infoDictionary];
@@ -160,7 +160,7 @@
     if (success) {
         self.accessToken = token;
     }
-    else if (error) {
+    else {
         NSString *localizedDescription = NSLocalizedString(@"Authorization not granted.", @"Error notification to indicate Instagram OAuth token was not provided.");
         *error = [NSError errorWithDomain:InstagramKitErrorDomain
                                      code:InstagramKitAuthenticationFailedError
@@ -177,7 +177,7 @@
 
 
 - (void)logout
-{    
+{
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     [[storage cookies] enumerateObjectsUsingBlock:^(NSHTTPCookie *cookie, NSUInteger idx, BOOL *stop) {
         [storage deleteCookie:cookie];
@@ -216,7 +216,7 @@
 
 
 - (NSDictionary *)queryStringParametersFromString:(NSString*)string {
-
+    
     NSMutableDictionary *dict = [NSMutableDictionary dictionary];
     [[string componentsSeparatedByString:@"&"] enumerateObjectsUsingBlock:^(NSString * param, NSUInteger idx, BOOL *stop) {
         NSArray *pairs = [param componentsSeparatedByString:@"="];
@@ -354,7 +354,7 @@
 
 
 - (void)deletePath:(NSString *)path
-      parameters:(NSDictionary *)parameters
+        parameters:(NSDictionary *)parameters
            success:(InstagramResponseBlock)success
            failure:(InstagramFailureBlock)failure
 {
@@ -386,18 +386,6 @@
           success:success
           failure:failure];
 }
-
-
-- (void)getPopularMediaWithSuccess:(InstagramMediaBlock)success
-                           failure:(InstagramFailureBlock)failure
-{
-    [self getPaginatedPath:@"media/popular"
-                parameters:nil
-             responseModel:[InstagramMedia class]
-                   success:success
-                   failure:failure];
-}
-
 
 - (void)getMediaAtLocation:(CLLocationCoordinate2D)location
                withSuccess:(InstagramMediaBlock)success
@@ -443,41 +431,41 @@
 
 
 - (void)searchLocationsAtLocation:(CLLocationCoordinate2D)loction
-                       withSuccess:(InstagramLocationsBlock)success
-                           failure:(InstagramFailureBlock)failure
+                      withSuccess:(InstagramLocationsBlock)success
+                          failure:(InstagramFailureBlock)failure
 {
-     [self getPaginatedPath:[NSString stringWithFormat:@"locations/search?lat=%f&lng=%f", loction.latitude, loction.longitude]
-                 parameters:nil
-              responseModel:[InstagramLocation class]
-                    success:success
-                    failure:failure];
+    [self getPaginatedPath:[NSString stringWithFormat:@"locations/search?lat=%f&lng=%f", loction.latitude, loction.longitude]
+                parameters:nil
+             responseModel:[InstagramLocation class]
+                   success:success
+                   failure:failure];
 }
 
 
 - (void)searchLocationsAtLocation:(CLLocationCoordinate2D)loction
-                     distanceInMeters:(NSInteger)distance
-                     withSuccess:(InstagramLocationsBlock)success
-                     failure:(InstagramFailureBlock)failure
+                 distanceInMeters:(NSInteger)distance
+                      withSuccess:(InstagramLocationsBlock)success
+                          failure:(InstagramFailureBlock)failure
 {
-     [self getPaginatedPath:[NSString stringWithFormat:@"locations/search?lat=%f&lng=%f&distance=%ld", loction.latitude, loction.longitude, (long)distance]
-                 parameters:nil
-              responseModel:[InstagramLocation class]
-                    success:success
-                    failure:failure];
+    [self getPaginatedPath:[NSString stringWithFormat:@"locations/search?lat=%f&lng=%f&distance=%ld", loction.latitude, loction.longitude, (long)distance]
+                parameters:nil
+             responseModel:[InstagramLocation class]
+                   success:success
+                   failure:failure];
 }
-                         
+
 
 - (void)getLocationWithId:(NSString*)locationId
-                     withSuccess:(InstagramLocationBlock)success
-                     failure:(InstagramFailureBlock)failure
- {
-     [self getPath:[NSString stringWithFormat:@"locations/%@", locationId]
-        parameters:nil
-     responseModel:[InstagramLocation class]
-           success:success
-           failure:failure];
- }
-                         
+              withSuccess:(InstagramLocationBlock)success
+                  failure:(InstagramFailureBlock)failure
+{
+    [self getPath:[NSString stringWithFormat:@"locations/%@", locationId]
+       parameters:nil
+    responseModel:[InstagramLocation class]
+          success:success
+          failure:failure];
+}
+
 
 
 #pragma mark - Users -
@@ -549,31 +537,6 @@
           failure:failure];
 }
 
-
-- (void)getSelfFeedWithSuccess:(InstagramMediaBlock)success
-                       failure:(InstagramFailureBlock)failure
-{
-    [self getSelfFeedWithCount:0
-                         maxId:nil
-                       success:success
-                       failure:failure];
-}
-
-
-- (void)getSelfFeedWithCount:(NSInteger)count
-                       maxId:(NSString *)maxId
-                     success:(InstagramMediaBlock)success
-                     failure:(InstagramFailureBlock)failure
-{
-    NSDictionary *params = [self parametersFromCount:count maxId:maxId andPaginationKey:kPaginationKeyMaxId];
-    [self getPaginatedPath:[NSString stringWithFormat:@"users/self/feed"]
-                parameters:params
-             responseModel:[InstagramMedia class]
-                   success:success
-                   failure:failure];
-}
-
-
 - (void)getMediaLikedBySelfWithSuccess:(InstagramMediaBlock)success
                                failure:(InstagramFailureBlock)failure
 {
@@ -600,7 +563,7 @@
 }
 
 - (void)getSelfRecentMediaWithSuccess:(InstagramMediaBlock)success
-							  failure:(InstagramFailureBlock)failure
+                              failure:(InstagramFailureBlock)failure
 {
     [self getSelfRecentMediaWithCount:0
                                 maxId:nil
@@ -617,7 +580,7 @@
     NSDictionary *params = [self parametersFromCount:count
                                                maxId:maxId
                                     andPaginationKey:kPaginationKeyMaxId];
-	[self getPaginatedPath:[NSString stringWithFormat:@"users/self/media/recent"]
+    [self getPaginatedPath:[NSString stringWithFormat:@"users/self/media/recent"]
                 parameters:params
              responseModel:[InstagramMedia class]
                    success:success
@@ -728,7 +691,7 @@
 {
     [self deletePath:[NSString stringWithFormat:@"media/%@/comments/%@",mediaId,commentId]
           parameters:nil
-               success:success
+             success:success
              failure:failure];
 }
 
@@ -765,7 +728,7 @@
 {
     [self deletePath:[NSString stringWithFormat:@"media/%@/likes",mediaId]
           parameters:nil
-               success:success
+             success:success
              failure:failure];
 }
 
@@ -784,24 +747,20 @@
           failure:failure];
 }
 
-
-- (void)getUsersFollowedByUser:(NSString *)userId
-                   withSuccess:(InstagramUsersBlock)success
+- (void)getUsersFollowedBySelf:(InstagramUsersBlock)success
                        failure:(InstagramFailureBlock)failure
 {
-    [self getPaginatedPath:[NSString stringWithFormat:@"users/%@/follows",userId]
+    [self getPaginatedPath:[NSString stringWithFormat:@"users/self/follows"]
                 parameters:nil
              responseModel:[InstagramUser class]
                    success:success
                    failure:failure];
 }
 
-
-- (void)getFollowersOfUser:(NSString *)userId
-               withSuccess:(InstagramUsersBlock)success
+- (void)getFollowersOfSelf:(InstagramUsersBlock)success
                    failure:(InstagramFailureBlock)failure
 {
-    [self getPaginatedPath:[NSString stringWithFormat:@"users/%@/followed-by",userId]
+    [self getPaginatedPath:[NSString stringWithFormat:@"users/self/followed-by"]
                 parameters:nil
              responseModel:[InstagramUser class]
                    success:success
@@ -881,8 +840,8 @@
 
 
 - (void)ignoreUser:(NSString *)userId
-     withSuccess:(InstagramResponseBlock)success
-         failure:(InstagramFailureBlock)failure
+       withSuccess:(InstagramResponseBlock)success
+           failure:(InstagramFailureBlock)failure
 {
     NSDictionary *params = @{kRelationshipActionKey:kRelationshipActionIgnore};
     [self postPath:[NSString stringWithFormat:@"users/%@/relationship",userId]

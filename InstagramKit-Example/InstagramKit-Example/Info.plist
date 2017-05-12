@@ -21,9 +21,9 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>InstagramAppClientId</key>
-	<string>&lt;Client Id here&gt;</string>
+	<string>f08209d9dc8647f496a15b8d60fcfdd9</string>
 	<key>InstagramAppRedirectURL</key>
-	<string>&lt;Redirect URL here&gt;</string>
+	<string>https://sugr.social/api/v1/instagram</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
