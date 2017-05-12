@@ -432,11 +432,11 @@
 #pragma mark - Locations -
 
 
-- (void)searchLocationsAtLocation:(CLLocationCoordinate2D)loction
+- (void)searchLocationsAtLocation:(CLLocationCoordinate2D)location
                       withSuccess:(InstagramLocationsBlock)success
                           failure:(InstagramFailureBlock)failure
 {
-    [self getPaginatedPath:[NSString stringWithFormat:@"locations/search?lat=%f&lng=%f", loction.latitude, loction.longitude]
+    [self getPaginatedPath:[NSString stringWithFormat:@"locations/search?lat=%f&lng=%f", location.latitude, location.longitude]
                 parameters:nil
              responseModel:[InstagramLocation class]
                    success:success
@@ -444,18 +444,28 @@
 }
 
 
-- (void)searchLocationsAtLocation:(CLLocationCoordinate2D)loction
+- (void)searchLocationsAtLocation:(CLLocationCoordinate2D)location
                  distanceInMeters:(NSInteger)distance
                       withSuccess:(InstagramLocationsBlock)success
                           failure:(InstagramFailureBlock)failure
 {
-    [self getPaginatedPath:[NSString stringWithFormat:@"locations/search?lat=%f&lng=%f&distance=%ld", loction.latitude, loction.longitude, (long)distance]
+    [self getPaginatedPath:[NSString stringWithFormat:@"locations/search?lat=%f&lng=%f&distance=%ld", location.latitude, location.longitude, (long)distance]
                 parameters:nil
              responseModel:[InstagramLocation class]
                    success:success
                    failure:failure];
 }
 
+- (void)searchLocationsWithFacebookId:(NSString *)facebookId
+                      withSuccess:(InstagramLocationsBlock)success
+                          failure:(InstagramFailureBlock)failure
+{
+    [self getPaginatedPath:[NSString stringWithFormat:@"locations/%@", facebookId]
+                parameters:nil
+             responseModel:[InstagramLocation class]
+                   success:success
+                   failure:failure];
+}
 
 - (void)getLocationWithId:(NSString*)locationId
               withSuccess:(InstagramLocationBlock)success

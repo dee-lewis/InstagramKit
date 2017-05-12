@@ -166,7 +166,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @param success  Provides an array of Location objects.
  *  @param failure  Provides an error and a server status code.
  */
-- (void)searchLocationsAtLocation:(CLLocationCoordinate2D)loction
+- (void)searchLocationsAtLocation:(CLLocationCoordinate2D)location
                       withSuccess:(InstagramLocationsBlock)success
                           failure:(nullable InstagramFailureBlock)failure;
 
@@ -175,14 +175,26 @@ NS_ASSUME_NONNULL_BEGIN
  *  Search for a location by geographic coordinate.
  *
  *  @param location         Geographic Location coordinates.
- *  @param distanceInMeters Default is 1000, max distance is 5000.
+ *  @param distance         Default is 1000, max distance is 5000.
  *  @param success          Provides an array of Location objects.
  *  @param failure          Provides an error and a server status code.
  */
-- (void)searchLocationsAtLocation:(CLLocationCoordinate2D)loction
+- (void)searchLocationsAtLocation:(CLLocationCoordinate2D)location
                  distanceInMeters:(NSInteger)distance
                       withSuccess:(InstagramLocationsBlock)success
                           failure:(nullable InstagramFailureBlock)failure;
+
+
+/**
+ *  Search for a location by Facebook Place Id.
+ *
+ *  @param facebookId       Facebook Place Id (numeric).
+ *  @param success          Provides an array of Location objects.
+ *  @param failure          Provides an error and a server status code.
+ */
+- (void)searchLocationsWithFacebookId:(NSString *)facebookId
+                          withSuccess:(InstagramLocationsBlock)success
+                              failure:(InstagramFailureBlock)failure;
 
 
 /**
@@ -350,7 +362,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Get a list of recently tagged media.
  *
- *  @param tag      Name of a Tag object.
+ *  @param name     Name of a Tag object.
  *  @param success  Provides an array of Media objects and Pagination info.
  *  @param failure  Provides an error and a server status code.
  */
