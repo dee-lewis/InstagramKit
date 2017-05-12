@@ -42,7 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Comparing UserInPhoto objects.
- *  @param  An UserInPhoto object.
+ *  @param  userInPhoto     UserInPhoto object.
  *  @return YES is Ids match. Else NO.
  */
 - (BOOL)isEqualToUserInPhoto:(UserInPhoto *)userInPhoto;

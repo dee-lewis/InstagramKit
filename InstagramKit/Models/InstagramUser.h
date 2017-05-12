@@ -71,7 +71,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  Convenience method to load details and update object.
- *  @param info JSON dictionary
+ *  @param success          Provides an array of user details.
+ *  @param failure          Provides an error and a server status code.
  */
 - (void)loadDetailsWithCompletion:(void (^)())success
                           failure:(nullable InstagramFailureBlock)failure;
