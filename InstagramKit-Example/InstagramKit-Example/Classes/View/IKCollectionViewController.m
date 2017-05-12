@@ -47,7 +47,6 @@
 
     self.mediaArray = [[NSMutableArray alloc] init];
     self.instagramEngine = [InstagramEngine sharedEngine];
-    [self.instagramEngine setAccessToken:@"4115351573.f08209d.796319c8cc2147f7aad5545c6b4e5c80"];
     [self updateCollectionViewLayout];
     
     [self loadMedia];
