@@ -68,7 +68,7 @@
                         
                         [expectation fulfill];
                         
-                    } failure:^(NSError * _Nonnull error, NSInteger serverStatusCode) {
+                    } failure:^(NSError * _Nonnull error, NSInteger serverStatusCode, NSDictionary *response) {
                         XCTAssertNil(error);
                         
                     }];
@@ -91,7 +91,7 @@
         
         [expectation fulfill];
 
-    } failure:^(NSError * _Nonnull error, NSInteger serverStatusCode) {
+    } failure:^(NSError * _Nonnull error, NSInteger serverStatusCode, NSDictionary *response) {
         
     }];
     
