@@ -152,7 +152,7 @@ typedef void (^InstagramPaginatiedResponseBlock)(NSArray<InstagramModel *> *pagi
 /**
  *  A generic block used as a callback for receiving a single object.
  *
- *  @param model    An Instagram model object.
+ *  @param object    An Instagram model object.
  */
 typedef void (^InstagramObjectBlock)(id object);
 
@@ -206,7 +206,7 @@ typedef void (^InstagramUserBlock)(InstagramUser *user);
 /**
  *  A callback block providing a Media object.
  *
- *  @param media    An InstagraMedia object.
+ *  @param media    An InstagramMedia object.
  */
 typedef void (^InstagramMediaObjectBlock)(InstagramMedia *media);
 
@@ -227,8 +227,8 @@ typedef void (^InstagramLocationBlock)(InstagramLocation *location);
 /**
  *  A generic failure block for handling server errors.
  *
- *  @param error
- *  @param serverStatusCode 
+ *  @param error                An Instagram Error
+ *  @param serverStatusCode     An Instagram Error Status Code
  */
 typedef void (^InstagramFailureBlock)(NSError* error, NSInteger serverStatusCode, NSDictionary *response);
 
